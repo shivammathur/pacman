@@ -1,5 +1,4 @@
 import pygame
-import sys
 
 
 class Color:
@@ -385,7 +384,6 @@ class Game:
         self.font = pygame.font.SysFont('arial', 30)
         self.all_sprites_list = None
 
-
     def setup_walls(self):
         """
         Make the walls. (x_pos, y_pos, width, height)
@@ -570,13 +568,13 @@ class Game:
                 self.do_next(
                     'Congratulations, you won!',
                     145,
-                    self.all_sprites_list,
                     block_list,
                     ghost_list,
                     pacman_collide,
                     wall_list,
                     gate,
                 )
+                return
 
             ghost_hit_list = pygame.sprite.spritecollide(pacman, ghost_list, False)
 
@@ -584,27 +582,25 @@ class Game:
                 self.do_next(
                     'Game Over',
                     235,
-                    self.all_sprites_list,
                     block_list,
                     ghost_list,
                     pacman_collide,
                     wall_list,
                     gate,
                 )
+                return
 
             pygame.display.flip()
 
             self.clock.tick(10)
 
-    def do_next(self, message, left, all_sprites_list, block_list, ghost_list, pacman_collide, wall_list, gate):
+    def do_next(self, message, left, block_list, ghost_list, pacman_collide, wall_list, gate):
         """
         Go to next configuration in the game
         :param message:
         :type message:
         :param left:
         :type left:
-        :param all_sprites_list:
-        :type all_sprites_list:
         :param block_list:
         :type block_list:
         :param ghost_list:
@@ -620,19 +616,20 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    sys.exit()
+                    return
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
-                        sys.exit()
+                        return
                     if event.key == pygame.K_RETURN:
-                        del all_sprites_list
+                        del self.all_sprites_list
                         del block_list
                         del ghost_list
                         del pacman_collide
                         del wall_list
                         del gate
                         self.start_game()
+                        return
 
             # Grey background
             w_surface = pygame.Surface((400, 200))  # the size of your rect
@@ -656,6 +653,4 @@ if __name__ == '__main__':
     # main function
     game = Game()
     game.start_game()
-    input()
     pygame.quit()
-    sys.exit()
